@@ -236,68 +236,68 @@
                 __block NSString *text = @"----车身状态----\n";
                 VRD_0X14_PTR pVrd0x14 = &(p->data.vrd_0x14);
                 unsigned short body_status = pVrd0x14->body_status;
-                NSDictionary<NSNumber *,NSString *> *bodyInfo = [NSMutableDictionary dictionaryWithDictionary:@{
-                    @0:@"左前门",
-                    @1:@"右前门",
-                    @2:@"左后门",
-                    @3:@"右后门",
-                    @4:@"尾箱",
-                    @5:@"危险灯",
+                NSArray<NSArray *> *bodyInfo = @[
+                    @[@0,@"左前门"],
+                    @[@1,@"右前门"],
+                    @[@2,@"左后门"],
+                    @[@3,@"右后门"],
+                    @[@4,@"尾箱"],
+                    @[@5,@"危险灯"],
                     
-                    @8:@"左前窗",
-                    @9:@"右前窗",
-                    @10:@"左后窗",
-                    @11:@"右后窗",
-                    @12:@"天窗",
-                    @13:@"中控锁",
-                    @14:@"小灯",
-                    @15:@"大灯",
-                }];
-                [bodyInfo enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-                    int value = body_status & (1 << key.intValue);
-                    text = [text stringByAppendingFormat:@"%@：%d\n",obj,value];
+                    @[@8,@"左前窗"],
+                    @[@9,@"右前窗"],
+                    @[@10,@"左后窗"],
+                    @[@11,@"右后窗"],
+                    @[@12,@"天窗"],
+                    @[@13,@"中控锁"],
+                    @[@14,@"小灯"],
+                    @[@15,@"大灯"]
+                ];
+                [bodyInfo enumerateObjectsUsingBlock:^(NSArray * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    int value = body_status & (1 << [obj.firstObject intValue]);
+                    text = [text stringByAppendingFormat:@"%@：%d\n",obj.lastObject,value];
                 }];
                 
                 text = [text stringByAppendingString:@"----行车状态----\n"];
                 unsigned short drive_status = pVrd0x14->drive_status;
-                NSDictionary<NSNumber *,NSString *> *driveInfo = [NSMutableDictionary dictionaryWithDictionary:@{
-                    @0:@"脚刹",
-                    @1:@"左转",
-                    @2:@"右转",
-                    @3:@"安全带1",
-                    @4:@"安全带2",
-                    @5:@"ACC",
-                    @6:@"遥控开锁",
-                    @7:@"遥控关锁",
-                    @8:@"左转灯",
-                    @9:@"右转灯",
-                    @10:@"后雾灯",
-                    @11:@"前雾灯",
-                    @12:@"发动机状态",
-                    @15:@"后备箱锁",
-                }];
-                [driveInfo enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-                    int value = drive_status & (1 << key.intValue);
-                    text = [text stringByAppendingFormat:@"%@：%d\n",obj,value];
+                NSArray<NSArray *> *driveInfo = @[
+                    @[@0,@"脚刹"],
+                    @[@1,@"左转"],
+                    @[@2,@"右转"],
+                    @[@3,@"安全带1"],
+                    @[@4,@"安全带2"],
+                    @[@5,@"ACC"],
+                    @[@6,@"遥控开锁"],
+                    @[@7,@"遥控关锁"],
+                    @[@8,@"左转灯"],
+                    @[@9,@"右转灯"],
+                    @[@10,@"后雾灯"],
+                    @[@11,@"前雾灯"],
+                    @[@12,@"发动机状态"],
+                    @[@15,@"后备箱锁"]
+                ];
+                [driveInfo enumerateObjectsUsingBlock:^(NSArray * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    int value = drive_status & (1 << [obj.firstObject intValue]);
+                    text = [text stringByAppendingFormat:@"%@：%d\n",obj.lastObject,value];
                 }];
                 
                 text = [text stringByAppendingString:@"----报警状态----\n"];
                 unsigned short alarm_status = pVrd0x14->alarm_status;
-                NSDictionary<NSNumber *,NSString *> *alarmInfo = [NSMutableDictionary dictionaryWithDictionary:@{
-                    @0:@"SOS报警",
-                    @1:@"门未关报警",
-                    @2:@"防盗报警",
-                    @3:@"左前轮胎压",
-                    @4:@"右前轮胎压",
-                    @5:@"左后轮胎压",
-                    @6:@"右后轮胎压",
-                    @13:@"电瓶电压低",
-                    @14:@"未关灯报警",
-                    @15:@"未熄火报警",
-                }];
-                [alarmInfo enumerateKeysAndObjectsUsingBlock:^(NSNumber * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
-                    int value = alarm_status & (1 << key.intValue);
-                    text = [text stringByAppendingFormat:@"%@：%d\n",obj,value];
+                NSArray<NSArray *> *alarmInfo = @[
+                    @[@0 ,@"SOS报警"  ],
+                    @[@1 ,@"门未关报警"],
+                    @[@2 ,@"防盗报警"  ],
+                    @[@3 ,@"左前轮胎压"],
+                    @[@4 ,@"右前轮胎压"],
+                    @[@5 ,@"左后轮胎压"],
+                    @[@6 ,@"右后轮胎压"],
+                    @[@13,@"电瓶电压低"],
+                    @[@14,@"未关灯报警"],
+                    @[@15,@"未熄火报警"]
+                ];
+                [alarmInfo enumerateObjectsUsingBlock:^(NSArray * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    int value = alarm_status & (1 << [obj.firstObject intValue]);
+                    text = [text stringByAppendingFormat:@"%@：%d\n",obj.lastObject,value];
                 }];
                 
                 text = [text stringByAppendingString:@"----车辆状态----\n"];
@@ -440,6 +440,9 @@
                 }
                 else if (cmd == SETTING_YKXC) {
                     funcTitle = @"遥控寻车";
+                }
+                else if (cmd == SETTING_PKE) {
+                    funcTitle = @"PKE系统";
                 }
                 if (funcTitle) {
                     [textHUD showWithText:[NSString stringWithFormat:@"%@%@",funcTitle,resultText] time:2];

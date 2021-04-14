@@ -58,7 +58,8 @@
             [NSMutableDictionary dictionaryWithObjectsAndKeys:@"门未关提醒",@"title",@1, @"state",nil],
             [NSMutableDictionary dictionaryWithObjectsAndKeys:@"未熄火提醒",@"title",@0, @"state",nil],
             [NSMutableDictionary dictionaryWithObjectsAndKeys:@"迎宾座椅",@"title",@0, @"state",nil],
-            [NSMutableDictionary dictionaryWithObjectsAndKeys:@"自动折叠后视镜",@"title",@1,@"state", nil]
+            [NSMutableDictionary dictionaryWithObjectsAndKeys:@"自动折叠后视镜",@"title",@1,@"state", nil],
+            [NSMutableDictionary dictionaryWithObjectsAndKeys:@"PKE系统开关",@"title",@1,@"state", nil]
         ];
     }
     self.data = [NSMutableArray arrayWithCapacity:data.count];
@@ -147,6 +148,9 @@
     }
     else if ([title isEqual:@"遥控寻车"]) {
         command = SETTING_YKXC;
+    }
+    else if ([title isEqual:@"PKE系统开关"]) {
+        command = SETTING_PKE;
     }
     if (command == 0x00 && value == 0x00) return;
     

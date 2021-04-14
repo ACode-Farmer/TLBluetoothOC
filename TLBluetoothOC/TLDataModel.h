@@ -52,6 +52,7 @@ typedef enum {
     SETTING_WXHTX = 0xA, //未熄火提醒
     SETTING_YBZY = 0x0B, //迎宾座椅
     SETTING_ZDHSJ = 0x0C, //自动后视镜
+    SETTING_PKE = 0x0D, //PKE系统开关
 } SETTING_CMD;
 
 @interface TLDataModel : NSObject
