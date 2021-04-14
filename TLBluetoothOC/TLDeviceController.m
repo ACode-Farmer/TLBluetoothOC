@@ -652,7 +652,7 @@
         [self dc_controlWithCommand:CONTROL_WINDOW param:0x00];
     }
     else if ([text isEqualToString:@"后备箱"]) {
-        [self dc_controlWithCommand:CONTROL_BOOT param:0x03];
+        [self dc_controlWithCommand:CONTROL_BOOT param:0x01];
     }
     else if ([text isEqualToString:@"报警控制"]) {
         [self dc_controlWithCommand:CONTROL_LIGHTHORN param:(int)cell.count];

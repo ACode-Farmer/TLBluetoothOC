@@ -112,9 +112,21 @@ LIST_PTR list_create_node(int type, void* data) {
             break;
         case 3:
             memcpy(&p->data, data, sizeof(STS_RPT));
+            p->data.sts_rpt.status.data.gps.alarm = BSWAP_32(p->data.sts_rpt.status.data.gps.alarm);
+            p->data.sts_rpt.status.data.gps.status = BSWAP_32(p->data.sts_rpt.status.data.gps.status);
+            p->data.sts_rpt.status.data.gps.latitude = BSWAP_32(p->data.sts_rpt.status.data.gps.latitude);
+            p->data.sts_rpt.status.data.gps.longitude = BSWAP_32(p->data.sts_rpt.status.data.gps.longitude);
+            p->data.sts_rpt.status.data.gps.height = BSWAP_16(p->data.sts_rpt.status.data.gps.height);
+            p->data.sts_rpt.status.data.gps.speed = BSWAP_16(p->data.sts_rpt.status.data.gps.speed);
+            p->data.sts_rpt.status.data.gps.direction = BSWAP_16(p->data.sts_rpt.status.data.gps.direction);
+            p->data.sts_rpt.status.data.mileage = BSWAP_32(p->data.sts_rpt.status.data.mileage);
+            p->data.sts_rpt.status.data.voltage = BSWAP_16(p->data.sts_rpt.status.data.voltage);
             break;
         case 4:
             memcpy(&p->data, data, sizeof(VRD_0X14));
+            p->data.vrd_0x14.body_status = BSWAP_16(p->data.vrd_0x14.body_status);
+            p->data.vrd_0x14.drive_status = BSWAP_16(p->data.vrd_0x14.drive_status);
+            p->data.vrd_0x14.alarm_status = BSWAP_16(p->data.vrd_0x14.alarm_status); 
             break;
         case 5:
             memcpy(&p->data, data, sizeof(VRD_0X15));
