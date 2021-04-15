@@ -14,6 +14,7 @@
 #import "TLDataModel.h"
 #import "UIView+TLImagePicker.h"
 #import "TLSettingController.h"
+#import "TLCommandController.h"
 
 #import "TLDeviceCell.h"
 
@@ -33,6 +34,8 @@
 @property (nonatomic, strong) UITextView *leftTextView;
 ///
 @property (nonatomic, strong) UITextView *rightTextView;
+///
+@property (nonatomic, strong) UITextView *totalTextView;
 
 ///
 @property (nonatomic, strong) UIButton *lockButton;
@@ -53,6 +56,13 @@
 ///
 @property (nonatomic, strong) TLProgressHUD *hud;
 
+///
+@property (nonatomic, strong) UIButton *historyCommandBtn;
+///
+@property (nonatomic, strong) UIButton *detailsCommandBtn;
+///
+@property (nonatomic, strong) NSMutableArray<NSString *> *commands;
+
 @end
 
 @implementation TLDeviceController
@@ -68,6 +78,8 @@
     [self.navigationItem setTitle:self.peripheral.name];
     
     self.view.backgroundColor = kRGB(22, 27, 48);
+    
+    _commands = [NSMutableArray array];
     
     [self dc_setupUI];
 }
@@ -85,8 +97,14 @@
     
     _lockButton.frame = CGRectMake(self.view.tl_width - 80, _startButton.tl_centerY - 20, 40, 40);
     
-    CGFloat collectionViewY = _startButton.tl_bottom + 30;
-    self.collectionView.frame = CGRectMake(0, _startButton.tl_bottom + 10, self.view.tl_width, self.view.tl_height - collectionViewY);
+    UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout;
+    CGFloat collectionViewHeight = layout.itemSize.height * 3 + layout.minimumLineSpacing * 2 + 20;
+    self.collectionView.frame = CGRectMake(0, _startButton.tl_bottom + 10, self.view.tl_width, collectionViewHeight);
+    
+    CGFloat btnWidth = (self.view.tl_width - 40 - 20) / 2;
+    self.historyCommandBtn.frame = CGRectMake(20, self.collectionView.tl_bottom + 25, btnWidth, 44);
+    
+    self.detailsCommandBtn.frame = CGRectMake(self.historyCommandBtn.tl_right + 20, self.historyCommandBtn.tl_top, btnWidth, 44);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -95,6 +113,13 @@
     self.peripheral.delegate = self;
     [self.peripheral discoverServices:nil];
 }
+//
+//- (void)viewWillDisappear:(BOOL)animated {
+//    [super viewWillDisappear:animated];
+//
+//    NSLog(@"viewWillDisappear");
+//
+//}
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
@@ -105,6 +130,22 @@
 }
 
 - (void)dealloc {
+    if (self.commands.count > 0) {
+        NSString *historyKey = @"tl_historyCommands";
+        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+        NSArray *tempArray = [userDefaults objectForKey:historyKey];
+        NSMutableArray *historyCommands = tempArray ? [NSMutableArray arrayWithArray:tempArray] : [NSMutableArray array];
+        
+//        NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+//        [dateformat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//        dateformat.timeZone = [NSTimeZone systemTimeZone];
+//        [historyCommands addObject:[NSString stringWithFormat:@"----%@----",[dateformat stringFromDate:[NSDate date]]]];
+        
+        [historyCommands addObjectsFromArray:self.commands];
+        //historyCommands
+        [userDefaults setObject:historyCommands forKey:historyKey];
+        [userDefaults synchronize];
+    }
     /**
      RunLoop会强引用timer
      如果_timer的target是self,会对self进行强引用(即使传入weakSelf也是不行的)，导致self不能释放，也就不会走到dealloc方法里。
@@ -145,6 +186,22 @@
                                 _startButton,_unlockButton,_lockButton]];
     
     [self.view addSubview:self.collectionView];
+    
+    _historyCommandBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_historyCommandBtn setTitle:@"历史指令流" forState:0];
+    [_historyCommandBtn setTitleColor:UIColor.whiteColor forState:0];
+    _historyCommandBtn.backgroundColor = UIColor.systemOrangeColor;
+    _historyCommandBtn.layer.cornerRadius = 4.0;
+    [_historyCommandBtn addTarget:self action:@selector(dc_historyCommandBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_historyCommandBtn];
+    
+    _detailsCommandBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_detailsCommandBtn setTitle:@"查看指令流详情" forState:0];
+    [_detailsCommandBtn setTitleColor:UIColor.whiteColor forState:0];
+    _detailsCommandBtn.backgroundColor = UIColor.systemOrangeColor;
+    _detailsCommandBtn.layer.cornerRadius = 4.0;
+    [_detailsCommandBtn addTarget:self action:@selector(dc_detailsCommandBtnAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:_detailsCommandBtn];
 }
 
 
@@ -158,6 +215,22 @@
     [self.centralManager cancelPeripheralConnection:self.peripheral];
     [self stopHeartbeatTimer];
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)dc_historyCommandBtnAction:(UIButton *)sender {
+    TLCommandController *commandController = [TLCommandController new];
+    NSString *historyKey = @"tl_historyCommands";
+    NSArray *historyCommands = [[NSUserDefaults standardUserDefaults] objectForKey:historyKey];
+    if (historyCommands) {
+        commandController.commands = [NSArray arrayWithArray:historyCommands];
+    }
+    [self.navigationController pushViewController:commandController animated:YES];
+}
+
+- (void)dc_detailsCommandBtnAction:(UIButton *)sender {
+    TLCommandController *commandController = [TLCommandController new];
+    commandController.commands = [NSArray arrayWithArray:self.commands];
+    [self.navigationController pushViewController:commandController animated:YES];
 }
 
 - (void)mainButtonAction:(UIButton *)sender {
@@ -206,6 +279,8 @@
         bleData = ble_getCommand(PASSTHROUGH, data, 4);
     }
     [self.peripheral writeValue:bleData forCharacteristic:self.characteristic type:CBCharacteristicWriteWithResponse];
+    
+    [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Send:\n",[self dataToString:bleData]]];
     
     if (self.hud == nil) {
         self.hud = [TLProgressHUD progressHUDWithType:TLProgressHUDTypeDefault];
@@ -395,6 +470,9 @@
                 else if (cmd == CONTROL_STOP) {
                     [textHUD showWithText:[NSString stringWithFormat:@"车辆熄火%@",pVrd0x15->result == 0x01 ? @"成功" : @"失败"] time:2];
                 }
+                else if (cmd == CONTROL_BIGLIGHT) {
+                    [textHUD showWithText:[NSString stringWithFormat:@"开大灯%d秒%@",pVrd0x15->param,pVrd0x15->result == 0x01 ? @"成功" : @"失败"] time:2];
+                }
                 
                 NSLog(@"0x15 cid = %d",pVrd0x15->cid);
                 NSLog(@"0x15 param = %d",pVrd0x15->param);
@@ -470,6 +548,8 @@
     }
     else {
         NSLog(@"complete data = %@",bufferData);
+        [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Receive:\n",[self dataToString:bufferData]]];
+        
         //应答
         NSData *bleData = ble_commonAnswer(byte[1], byte[2]);
         [self.peripheral writeValue:bleData forCharacteristic:self.characteristic type:CBCharacteristicWriteWithResponse];
@@ -539,6 +619,9 @@
     data[3] = value;
     NSData *bleData = ble_getCommand(PASSTHROUGH, data, 4);
     [self.peripheral writeValue:bleData forCharacteristic:self.characteristic type:CBCharacteristicWriteWithResponse];
+    
+    [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Send:\n",[self dataToString:bleData]]];
+    
     if (self.hud == nil) {
         self.hud = [TLProgressHUD progressHUDWithType:TLProgressHUDTypeDefault];
     }
@@ -660,6 +743,15 @@
     else if ([text isEqualToString:@"熄火"]) {
         [self dc_controlWithCommand:CONTROL_STOP param:0x00];
     }
+    else if ([text isEqualToString:@"开大灯"]) {
+        [self dc_controlWithCommand:CONTROL_BIGLIGHT param:0x0A];
+    }
+    else if ([text isEqualToString:@"查询蓝牙状态"]) {
+        NSData *bleData = ble_queryStatus(1);
+        [self.peripheral writeValue:bleData forCharacteristic:self.characteristic type:CBCharacteristicWriteWithResponse];
+        
+        [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Send:\n",[self dataToString:bleData]]];
+    }
 }
 
 #pragma mark - Getters
@@ -671,7 +763,7 @@
         layout.minimumInteritemSpacing = 15.0;
         layout.sectionInset = UIEdgeInsetsMake(10, 20, 10, 20);
         NSInteger itemWidth = (SCREEN_WIDTH - layout.sectionInset.left - layout.sectionInset.right - layout.minimumInteritemSpacing * 2) / 3;
-        layout.itemSize = CGSizeMake(itemWidth, itemWidth);
+        layout.itemSize = CGSizeMake(itemWidth, itemWidth / 2);
         
         _collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         _collectionView.backgroundColor = UIColor.clearColor;
@@ -686,7 +778,7 @@
 
 - (NSArray<NSString *> *)items {
     if (_items == nil) {
-        _items = @[@"喇叭",@"危险灯",@"报警控制",@"车窗升",@"车窗降",@"后备箱",@"熄火"];
+        _items = @[@"喇叭",@"危险灯",@"报警控制",@"车窗升",@"车窗降",@"后备箱",@"熄火",@"开大灯",@"查询蓝牙状态"];
     }
     return _items;
 }

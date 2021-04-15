@@ -44,6 +44,7 @@
 		A0508DE62601F4A50043B6B1 /* MJFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = A0508DDA2601F4A50043B6B1 /* MJFoundation.m */; };
 		A0508DFA2601FAF40043B6B1 /* TLDataModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A0508DF92601FAF40043B6B1 /* TLDataModel.m */; };
 		A0508ECD2604AD8C0043B6B1 /* data_decode.c in Sources */ = {isa = PBXBuildFile; fileRef = A0508ECC2604AD8C0043B6B1 /* data_decode.c */; };
+		A0830D072627DFA700765786 /* TLCommandController.m in Sources */ = {isa = PBXBuildFile; fileRef = A0830D062627DFA700765786 /* TLCommandController.m */; };
 		A0F1A750254A69CA0096DE7B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A0F1A74F254A69CA0096DE7B /* AppDelegate.m */; };
 		A0F1A753254A69CA0096DE7B /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A0F1A752254A69CA0096DE7B /* SceneDelegate.m */; };
 		A0F1A759254A69CB0096DE7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A0F1A757254A69CB0096DE7B /* Main.storyboard */; };
@@ -152,6 +153,8 @@
 		A0508DF92601FAF40043B6B1 /* TLDataModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TLDataModel.m; sourceTree = "<group>"; };
 		A0508ECB2604AD8C0043B6B1 /* data_decode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = data_decode.h; sourceTree = "<group>"; };
 		A0508ECC2604AD8C0043B6B1 /* data_decode.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = data_decode.c; sourceTree = "<group>"; };
+		A0830D052627DFA600765786 /* TLCommandController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TLCommandController.h; sourceTree = "<group>"; };
+		A0830D062627DFA700765786 /* TLCommandController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TLCommandController.m; sourceTree = "<group>"; };
 		A0F1A74B254A69CA0096DE7B /* TLBluetoothOC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TLBluetoothOC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A0F1A74E254A69CA0096DE7B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		A0F1A74F254A69CA0096DE7B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -362,6 +365,8 @@
 				A0508D832601EF930043B6B1 /* TLDeviceController.m */,
 				A01668FF2611CE3C0058A633 /* TLSettingController.h */,
 				A01669002611CE3C0058A633 /* TLSettingController.m */,
+				A0830D052627DFA600765786 /* TLCommandController.h */,
+				A0830D062627DFA700765786 /* TLCommandController.m */,
 				A01669052611CE780058A633 /* TLDeviceCell.h */,
 				A01669062611CE780058A633 /* TLDeviceCell.m */,
 				A0508DF82601FAF40043B6B1 /* TLDataModel.h */,
@@ -556,6 +561,7 @@
 				A0508DB32601F4980043B6B1 /* UIRefreshControl+AFNetworking.m in Sources */,
 				A0F1A788254A6C130096DE7B /* UIView+Layout.m in Sources */,
 				A0508DE52601F4A50043B6B1 /* MJPropertyKey.m in Sources */,
+				A0830D072627DFA700765786 /* TLCommandController.m in Sources */,
 				A0508DBE2601F4980043B6B1 /* AFURLRequestSerialization.m in Sources */,
 				A0F1A753254A69CA0096DE7B /* SceneDelegate.m in Sources */,
 				A0508DB72601F4980043B6B1 /* UIActivityIndicatorView+AFNetworking.m in Sources */,

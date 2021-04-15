@@ -6,6 +6,7 @@
 //
 
 #import "TLDeviceCell.h"
+#import "UIView+TLImagePicker.h"
 
 @interface TLDeviceCell ()
 
@@ -21,18 +22,18 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = UIColor.orangeColor;
+        self.backgroundColor = UIColor.systemOrangeColor;
         _textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
         _textLabel.textColor = UIColor.whiteColor;
         _textLabel.textAlignment = NSTextAlignmentCenter;
-        
+        _textLabel.numberOfLines = 0;
         [self addSubview:_textLabel];
         
         
-        _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 40)];
+        _topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, 30)];
         [self addSubview:_topView];
         
-        _countLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, _topView.frame.size.width - 80, 40)];
+        _countLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 0, _topView.frame.size.width - 80, _topView.tl_height)];
         _countLabel.textColor = UIColor.whiteColor;
         _countLabel.text = @"3";
         _countLabel.textAlignment = NSTextAlignmentCenter;
@@ -42,14 +43,14 @@
         leftBtn.tag = 1000;
         [leftBtn setTitle:@"-" forState:0];
         [leftBtn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        leftBtn.frame = CGRectMake(0, 0, 40, 40);
+        leftBtn.frame = CGRectMake(0, 0, 40, _topView.tl_height);
         [_topView addSubview:leftBtn];
         
         UIButton *rightBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         rightBtn.tag = 1001;
         [rightBtn setTitle:@"+" forState:0];
         [rightBtn addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-        rightBtn.frame = CGRectMake(_topView.frame.size.width - 40, 0, 40, 40);
+        rightBtn.frame = CGRectMake(_topView.frame.size.width - 40, 0, 40, _topView.tl_height);
         [_topView addSubview:rightBtn];
     }
     return self;
