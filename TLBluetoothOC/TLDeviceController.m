@@ -135,12 +135,6 @@
         NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
         NSArray *tempArray = [userDefaults objectForKey:historyKey];
         NSMutableArray *historyCommands = tempArray ? [NSMutableArray arrayWithArray:tempArray] : [NSMutableArray array];
-        
-//        NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
-//        [dateformat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-//        dateformat.timeZone = [NSTimeZone systemTimeZone];
-//        [historyCommands addObject:[NSString stringWithFormat:@"----%@----",[dateformat stringFromDate:[NSDate date]]]];
-        
         [historyCommands addObjectsFromArray:self.commands];
         //historyCommands
         [userDefaults setObject:historyCommands forKey:historyKey];
@@ -222,7 +216,12 @@
     NSString *historyKey = @"tl_historyCommands";
     NSArray *historyCommands = [[NSUserDefaults standardUserDefaults] objectForKey:historyKey];
     if (historyCommands) {
-        commandController.commands = [NSArray arrayWithArray:historyCommands];
+        NSMutableArray *tempArray = [NSMutableArray arrayWithArray:historyCommands];
+        [tempArray addObjectsFromArray:self.commands];
+        commandController.commands = [NSArray arrayWithArray:tempArray];
+    }
+    else {
+        commandController.commands = [NSArray arrayWithArray:self.commands];
     }
     [self.navigationController pushViewController:commandController animated:YES];
 }
@@ -280,7 +279,7 @@
     }
     [self.peripheral writeValue:bleData forCharacteristic:self.characteristic type:CBCharacteristicWriteWithResponse];
     
-    [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Send:\n",[self dataToString:bleData]]];
+    [self.commands addObject:[NSString stringWithFormat:@"Send(%@):\n%@",[self currentDateString],[self dataToString:bleData]]];
     
     if (self.hud == nil) {
         self.hud = [TLProgressHUD progressHUDWithType:TLProgressHUDTypeDefault];
@@ -548,7 +547,7 @@
     }
     else {
         NSLog(@"complete data = %@",bufferData);
-        [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Receive:\n",[self dataToString:bufferData]]];
+        [self.commands addObject:[NSString stringWithFormat:@"Receive(%@):\n%@",[self currentDateString],[self dataToString:bufferData]]];
         
         //应答
         NSData *bleData = ble_commonAnswer(byte[1], byte[2]);
@@ -576,6 +575,13 @@
         str = [str stringByAppendingString:tempStr];
     }
     return str;
+}
+
+- (NSString *)currentDateString {
+    NSDateFormatter *dateformat = [[NSDateFormatter alloc] init];
+    [dateformat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    dateformat.timeZone = [NSTimeZone systemTimeZone];
+    return [dateformat stringFromDate:[NSDate date]];
 }
 
 #pragma mark - Timer
@@ -620,7 +626,7 @@
     NSData *bleData = ble_getCommand(PASSTHROUGH, data, 4);
     [self.peripheral writeValue:bleData forCharacteristic:self.characteristic type:CBCharacteristicWriteWithResponse];
     
-    [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Send:\n",[self dataToString:bleData]]];
+    [self.commands addObject:[NSString stringWithFormat:@"Send(%@):\n%@",[self currentDateString],[self dataToString:bleData]]];
     
     if (self.hud == nil) {
         self.hud = [TLProgressHUD progressHUDWithType:TLProgressHUDTypeDefault];
@@ -750,7 +756,12 @@
         NSData *bleData = ble_queryStatus(1);
         [self.peripheral writeValue:bleData forCharacteristic:self.characteristic type:CBCharacteristicWriteWithResponse];
         
-        [self.commands addObject:[NSString stringWithFormat:@"%@%@",@"Send:\n",[self dataToString:bleData]]];
+        [self.commands addObject:[NSString stringWithFormat:@"Send(%@):\n%@",[self currentDateString],[self dataToString:bleData]]];
+        
+        if (self.hud == nil) {
+            self.hud = [TLProgressHUD progressHUDWithType:TLProgressHUDTypeDefault];
+        }
+        [self.hud showWithText:@"发送中..."];
     }
 }
 
