@@ -555,10 +555,11 @@
         
         //解码数据
         DEC d_data = decode((char *)byte);
-        //list_analyse(d_data.pList);
-        [self list_analyse:d_data.pList];
-        
-        list_clear(d_data.pList);
+        if (d_data.pList != NULL) {
+            [self list_analyse:d_data.pList];
+            
+            list_clear(d_data.pList);
+        }
     }
     _bufferData = nil;
     _dataLength = 0;

@@ -12,6 +12,9 @@
 ///
 @property (nonatomic, strong) UITextView *textView;
 
+///
+@property (nonatomic, strong) UIDocumentInteractionController *documentInteractionController;
+
 @end
 
 @implementation TLCommandController
@@ -40,6 +43,17 @@
 - (void)dc_copyItemAction:(UIBarButtonItem *)sender {
     //UIPasteboard *pab = [UIPasteboard generalPasteboard];
     [[UIPasteboard generalPasteboard] setString:_textView.text];
+}
+
+- (void)exportFileToOtherApp:(NSString *)filePath {
+    NSURL *url = [NSURL fileURLWithPath:filePath];
+    _documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:url];
+
+    //[documentInteractionController setDelegate:self];
+    
+    CGRect rect = CGRectMake(self.view.bounds.size.width, 40.0, 0.0, 0.0);
+    
+    [_documentInteractionController presentOpenInMenuFromRect:rect inView:self.view animated:YES];
 }
 
 @end

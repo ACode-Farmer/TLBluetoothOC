@@ -218,6 +218,10 @@ unsigned char chksum(const unsigned char *data, int len) {
 DEC decode(char *hex) {
     unsigned char *buf = (unsigned char *)hex;//get_buf_from_hex(hex);
     DEC dec;
+    dec.command = 0;
+    dec.serial = 0;
+    dec.pList = NULL;
+    
     if (buf[0] == FS) { // 帧起始校验
         FRAME_HEAD_PTR pFrameHead = (FRAME_HEAD_PTR)buf;
         print_frame_head(pFrameHead);
